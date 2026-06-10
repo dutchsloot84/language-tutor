@@ -1,12 +1,29 @@
 "use client";
 
-import { Download, RotateCcw, Upload } from "lucide-react";
-import { useMemo, type ReactNode } from "react";
+import { Check, Copy, Download, RotateCcw, Upload } from "lucide-react";
+import { useMemo, useState, type ReactNode } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { useAppState } from "@/components/useAppState";
 import { createLearnerSnapshot, exportLearnerSnapshot } from "@/lib/snapshot";
 import { exportState, importState, resetState } from "@/lib/storage";
 import type { LearnerSnapshot, PracticeLog, QuizMiss, SnapshotPhrase } from "@/lib/types";
+
+function createCodexTutorPrompt(snapshot: LearnerSnapshot) {
+  return `Use /teach-polish for this Language Tutor handoff.
+
+Read the learner snapshot JSON below. Based only on this snapshot, choose one focused next action: one short drill, one short lesson, or one progress review. Prioritize recent corrections and notes, repeated review misses, recent quiz misses, hard phrases, and due reviews.
+
+Keep it practical for home/family Polish. End with one thing to say at home today and one thing to log back in the app.
+
+This is a manual local-first copy/paste handoff. Do not add runtime API calls, backend routes, cloud sync, auth, or generated content import.
+
+Learner snapshot:
+
+\`\`\`json
+${JSON.stringify(snapshot, null, 2)}
+\`\`\`
+`;
+}
 
 function SnapshotCount({ label, value, detail }: { label: string; value: string | number; detail?: string }) {
   return (
@@ -168,7 +185,23 @@ function SnapshotPreview({ snapshot }: { snapshot: LearnerSnapshot }) {
 
 export default function SettingsPage() {
   const [state, setState] = useAppState();
+  const [codexPrompt, setCodexPrompt] = useState("");
+  const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "manual">("idle");
   const snapshot = useMemo(() => (state ? createLearnerSnapshot(state) : null), [state]);
+
+  async function copyCodexTutorPrompt() {
+    if (!snapshot) return;
+    const prompt = createCodexTutorPrompt(snapshot);
+    setCodexPrompt(prompt);
+
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(prompt);
+      setCopyStatus("copied");
+    } catch {
+      setCopyStatus("manual");
+    }
+  }
 
   return (
     <main className="page-shell">
@@ -189,6 +222,9 @@ export default function SettingsPage() {
         <div className="panel">
           <h2 className="text-lg font-bold">Data tools</h2>
           <div className="mt-4 grid gap-2">
+            <button className="action-button justify-start" onClick={copyCodexTutorPrompt} disabled={!snapshot}>
+              {copyStatus === "copied" ? <Check size={18} /> : <Copy size={18} />} Copy Codex Tutor Prompt
+            </button>
             <button className="action-button justify-start" onClick={() => state && exportLearnerSnapshot(state)}>
               <Download size={18} /> Export Learner Snapshot
             </button>
@@ -217,6 +253,24 @@ export default function SettingsPage() {
               <RotateCcw size={18} /> Reset demo data
             </button>
           </div>
+          <p className="mt-3 text-xs text-ink/60">
+            Copies a local prompt packet for manual Codex use. Nothing is sent from the app.
+          </p>
+          {codexPrompt ? (
+            <div className="mt-3">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
+                <span className="chip">{copyStatus === "copied" ? "Copied" : "Manual copy fallback"}</span>
+                <span className="text-xs text-ink/60">Prompt stays visible here if clipboard access fails.</span>
+              </div>
+              <textarea
+                className="focus-ring min-h-40 w-full resize-y rounded-md border border-black/15 bg-white p-3 font-mono text-xs leading-relaxed text-ink"
+                readOnly
+                value={codexPrompt}
+                onFocus={(event) => event.currentTarget.select()}
+                aria-label="Codex tutor prompt"
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
