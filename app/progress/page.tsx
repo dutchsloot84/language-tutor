@@ -4,12 +4,38 @@ import { PageHeader } from "@/components/PageHeader";
 import { StatCard } from "@/components/StatCard";
 import { useAppState } from "@/components/useAppState";
 import { lessons, phrases } from "@/lib/polish-content";
+import { createProgressProofScorecard } from "@/lib/progress-proof";
+
+function ProofMetric({ label, value, detail }: { label: string; value: string | number; detail: string }) {
+  return (
+    <div className="rounded-md border border-black/10 bg-black/[0.03] p-3">
+      <p className="text-xs font-bold uppercase tracking-wide text-ink/55">{label}</p>
+      <p className="mt-2 text-2xl font-bold text-ink">{value}</p>
+      <p className="mt-1 text-sm text-ink/65">{detail}</p>
+    </div>
+  );
+}
+
+function retryCoverageDetail(value: number | null) {
+  return value === null ? "No miss signals yet" : `${value}% of miss signals`;
+}
+
+function knownRetryDetail(value: number | null) {
+  return value === null ? "No retries yet" : `${value}% of miss-drill retries`;
+}
+
+function homeTrendLabel(trend: "up" | "flat" | "down") {
+  if (trend === "up") return "up from prior week";
+  if (trend === "down") return "below prior week";
+  return "same as prior week";
+}
 
 export default function ProgressPage() {
   const [state] = useAppState();
-  const known = state ? Object.values(state.phraseStatuses).filter((status) => status === "known").length : 0;
-  const hard = state ? Object.values(state.phraseStatuses).filter((status) => status === "hard").length : 0;
-  const review = state ? Object.values(state.phraseStatuses).filter((status) => status === "needs-review").length : 0;
+  const proof = state ? createProgressProofScorecard(state) : null;
+  const known = proof?.knownPhraseCount ?? 0;
+  const hard = proof?.hardPhraseCount ?? 0;
+  const review = proof?.needsReviewPhraseCount ?? 0;
   const quizScores = state ? Object.values(state.quizScores).flat() : [];
   const average = quizScores.length ? Math.round(quizScores.reduce((sum, item) => sum + item, 0) / quizScores.length) : 0;
 
@@ -21,6 +47,47 @@ export default function ProgressPage() {
         <StatCard label="Known" value={known} detail={`of ${phrases.length} phrases`} />
         <StatCard label="Hard" value={hard} detail="marked hard" />
         <StatCard label="Quiz avg" value={`${average}%`} detail={`${quizScores.length} attempts`} />
+      </section>
+
+      <section className="panel mt-5">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h2 className="text-lg font-bold">Proof scorecard</h2>
+            <p className="mt-1 text-sm text-ink/65">{proof?.loopRead ?? "Local proof appears after progress loads."}</p>
+          </div>
+          <p className="text-xs font-bold uppercase tracking-wide text-moss">Local only</p>
+        </div>
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <ProofMetric
+            label="Recent quiz misses"
+            value={proof?.recentQuizMissCount ?? 0}
+            detail="latest 20 logged miss items"
+          />
+          <ProofMetric
+            label="Review miss signals"
+            value={proof?.reviewMissSignalCount ?? 0}
+            detail={`${proof?.reviewMissPhraseCount ?? 0} phrases with review evidence`}
+          />
+          <ProofMetric
+            label="Miss-drill retries"
+            value={proof?.missDrillRetryCount ?? 0}
+            detail={retryCoverageDetail(proof?.retryCoveragePercent ?? null)}
+          />
+          <ProofMetric
+            label="Rated known in drill"
+            value={proof?.missDrillKnownCount ?? 0}
+            detail={knownRetryDetail(proof?.knownRetryPercent ?? null)}
+          />
+          <ProofMetric
+            label="Used at home"
+            value={proof?.usedAtHomeCount ?? 0}
+            detail={`${proof?.usedAtHomeLast7Days ?? 0} last 7 days, ${proof?.usedAtHomePrevious7Days ?? 0} prior (${homeTrendLabel(
+              proof?.homeUseTrend ?? "flat"
+            )})`}
+          />
+          <ProofMetric label="Phrase proof" value={known} detail={`${hard} hard, ${review} needs review`} />
+        </div>
       </section>
 
       <section className="mt-5 grid gap-4 lg:grid-cols-2">
