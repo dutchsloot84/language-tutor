@@ -24,7 +24,7 @@ The project is proving that a useful adaptive tutor can work with:
 3. Learner previews, exports, or copies a tutor packet from Settings & Data.
 4. Codex reads the snapshot with `/teach-polish`.
 5. Codex generates a next lesson, drill, progress review, or content update.
-6. Useful generated content is committed back to the repo.
+6. Useful generated lesson content passes `docs/playbooks/commit-worthy-lessons.md` before it is committed back to the repo.
 
 ## Recently Completed
 
@@ -34,6 +34,7 @@ The project is proving that a useful adaptive tutor can work with:
 - Daily miss drill for recent quiz misses and review misses.
 - `/teach-polish` snapshot schema docs.
 - README documentation for the adaptive tutor loop.
+- Commit-worthy lesson workflow for reviewing generated lessons before seeded-content commits.
 
 ## Active Constraints
 
@@ -61,16 +62,15 @@ Prove the adaptive loop over several real study sessions:
 1. Progress proof scorecard.
 2. Generated drill format.
 3. Generated drill import.
-4. Commit-worthy lesson workflow.
-5. Local custom lesson storage decision.
-6. Language module boundary.
+4. Local custom lesson storage decision.
+5. Language module boundary.
 
 ## Recommended Next Implementation Wave
 
 1. LT-006 Progress Proof Scorecard.
 2. LT-007 Generated Drill Format.
 3. LT-008 Generated Drill Import after LT-007 lands.
-4. LT-009 Commit-Worthy Lesson Workflow before deciding LT-010.
+4. Decide LT-010 Local Custom Lesson Storage only after the commit-worthy lesson workflow is proven useful in review.
 
 LT-010 Local Custom Lesson Storage should stay `status:needs-decision` until the commit-worthy lesson workflow is proven and the owner chooses browser-local custom lessons over continuing commit-only seeded lessons.
 

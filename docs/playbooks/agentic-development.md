@@ -89,6 +89,8 @@ When using `/teach-polish` with an app snapshot:
 5. Generate one lesson, one drill, or one progress review.
 6. End with one thing to say at home and one thing to log back in the app.
 
+Before committing a generated lesson as seeded app content, use `docs/playbooks/commit-worthy-lessons.md`.
+
 ## Validation Ladder
 
 Use the smallest truthful proof:
