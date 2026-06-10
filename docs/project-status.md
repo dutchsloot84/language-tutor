@@ -69,7 +69,8 @@ Prove the adaptive loop over several real study sessions:
 
 1. LT-007 Generated Drill Format.
 2. LT-008 Generated Drill Import after LT-007 lands.
-3. Decide LT-010 Local Custom Lesson Storage only after the commit-worthy lesson workflow is proven useful in review.
+3. LT-010A Local Custom Lesson Storage Decision only after the commit-worthy lesson workflow is proven useful in review.
+4. If LT-010A is approved, LT-010B Custom Lesson Schema And Migration should be the first implementation slice.
 
 LT-010 Local Custom Lesson Storage should stay `status:needs-decision` until the commit-worthy lesson workflow is proven and the owner chooses browser-local custom lessons over continuing commit-only seeded lessons.
 

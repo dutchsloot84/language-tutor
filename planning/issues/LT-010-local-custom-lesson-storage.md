@@ -6,30 +6,41 @@
 - Trust label: `trust:agent-draft`
 - Priority: P2
 - Owner: Shayne
+- Status: `status:needs-decision`
 
 ## Problem
 
-Generated or hand-authored lessons may eventually need to live in browser-local state, but this is riskier than committing seeded content because it changes storage, export/import, lesson rendering, quiz history, and snapshot behavior.
+Generated or hand-authored lessons may eventually need to live in browser-local state, but the original LT-010 scope is too broad for one implementation slice. It crosses storage shape, old localStorage compatibility, safe local lesson validation, lesson rendering, completion logging, raw export/import, learner snapshot summaries, and workflow docs.
+
+The project now has the LT-009 commit-worthy lesson workflow. That workflow is the quality gate for committed seeded lessons, but it does not automatically decide whether the app should also support browser-local custom lessons.
 
 ## Outcome
 
-Add browser-local custom lessons only after the commit-worthy lesson workflow is proven. Custom lessons should render alongside seeded lessons, preserve existing progress, and remain fully local/exportable.
+Split LT-010 into smaller packets that can be executed only after the owner explicitly chooses browser-local custom lesson storage over continuing commit-only seeded lessons for another wave.
+
+Recommended sequence:
+
+1. `LT-010A-local-custom-lesson-storage-decision.md`
+2. `LT-010B-custom-lesson-schema-migration.md`
+3. `LT-010C-custom-lesson-import-validation.md`
+4. `LT-010D-custom-lesson-rendering-completion.md`
+5. `LT-010E-custom-lesson-snapshot-export-compatibility.md`
+6. `LT-010F-custom-lesson-docs-workflow.md`
 
 ## Scope
 - In scope:
-  - add a versioned custom lesson collection to local state
-  - defensively migrate old `AppState.version: 1` records that do not have custom lessons
-  - render custom lessons alongside seeded lessons without changing product identity
-  - include custom lessons and attempts in raw JSON export/import
-  - include custom lesson attempts or summaries in learner snapshots
-  - add local create/import path only if the lesson shape is already documented and reviewable
+  - preserve LT-010 as the parent planning packet
+  - document the decision required before implementation
+  - split storage, import, rendering/completion, snapshot/export compatibility, and docs work into bounded slices
+  - keep all future implementation local-first and browser-local
 - Out of scope:
+  - implementing custom lesson storage in this refinement slice
+  - adding custom lessons to browser state now
   - runtime AI lesson generation
   - cloud storage or sync
   - auth or profiles
+  - backend routes, API keys, hosting assumptions, or paid APIs
   - adding Japanese or another language module
-  - rich lesson authoring beyond the smallest useful local import/add flow
-  - replacing committed seeded lessons
 
 ## Source Docs And Files
 - `AGENTS.md`
@@ -37,8 +48,10 @@ Add browser-local custom lessons only after the commit-worthy lesson workflow is
 - `docs/project-status.md`
 - `docs/playbooks/agentic-development.md`
 - `docs/backlog/local-first-roadmap.md`
+- `docs/playbooks/commit-worthy-lessons.md`
 - `planning/issues/LT-009-commit-worthy-lesson-workflow.md`
 - `.codex/skills/teach-polish/LESSON-FORMAT.md`
+- `.codex/skills/teach-polish/resources/learner-snapshot-schema.md`
 - `lib/types.ts`
 - `lib/storage.ts`
 - `lib/snapshot.ts`
@@ -48,56 +61,43 @@ Add browser-local custom lessons only after the commit-worthy lesson workflow is
 - `app/settings/page.tsx`
 
 ## Acceptance Criteria
-- [ ] Custom lessons persist in browser-local state with a versioned shape.
-- [ ] Old localStorage/raw JSON state without custom lessons loads and imports safely.
-- [ ] Seeded lessons still render and retain existing attempts/progress.
-- [ ] Custom lessons render in the lesson selection/lesson experience with clear local/custom labeling.
-- [ ] Completing a custom lesson records attempts without breaking seeded lesson history.
-- [ ] Raw export/import includes custom lessons and their attempts.
-- [ ] Learner snapshot includes custom lesson attempts or summaries without dumping unnecessary full local data.
-- [ ] No learner data leaves the device and no runtime AI is added.
+- [ ] LT-010 remains marked `status:needs-decision` until the owner chooses browser-local custom lessons.
+- [ ] Sub-slices name clear dependencies, in-scope work, out-of-scope work, validation, and docs updates.
+- [ ] Storage migration, old raw JSON compatibility, duplicate IDs, parser defaults, raw export/import, and snapshot impact are explicitly covered before any UI slice.
+- [ ] No packet adds runtime AI, cloud, auth, hosting, sync, backend routes, paid APIs, or learner data upload.
+- [ ] The learning loop remains snapshot evidence -> reviewed lesson -> local practice -> proof.
 
 ## Data And Privacy Check
-- Local-only data touched: custom lesson records, lesson attempts, raw export/import, learner snapshot summaries.
-- Export/import impact: significant; implementation must preserve old raw JSON compatibility and include manual round-trip checks.
+- Local-only data touched: planning docs only in this refinement slice.
+- Export/import impact: none in this refinement slice; future packets explicitly cover raw JSON compatibility.
 - Does learner data leave device? No.
 - Cloud/API/auth involved? No.
-- ADR needed before implementation? No, if scope stays browser-local and manual.
+- ADR needed before implementation? No, if the owner approves browser-local custom lessons and scope stays local-only. Create an ADR first if scope expands to sync, auth, hosted storage, runtime AI, backend secrets, or learner data upload.
 
 ## Validation
 - Automated:
-  - `npm run setup:worktree` if dependencies are missing in the worktree
-  - `npm run typecheck`
-  - `npm run build`
+  - none required for docs-only refinement
 - Manual:
-  - load or import old state with no custom lesson fields
-  - add/import one custom lesson locally
-  - complete the custom lesson
-  - export raw JSON and import it back, verifying custom lesson and attempt survive
-  - verify learner snapshot includes custom lesson attempt/summary
+  - cross-read this parent packet and LT-010 sub-packets against the source docs/files listed above
+  - run the requested review lenses before commit and PR
 - Browser smoke check:
-  - `/lesson`
-  - `/progress`
-  - `/settings`
-  - any custom lesson import/add route if added
+  - not required because no runtime files changed
 
 ## Docs To Update
-- Update `README.md` Add Lessons and Adaptive Tutor Loop sections if custom local lessons become supported.
-- Update `.codex/skills/teach-polish/resources/learner-snapshot-schema.md` if snapshot shape changes.
-- Update `docs/project-status.md` after implementation if this changes the recommended next wave.
+- `docs/backlog/local-first-roadmap.md` to point LT-010 to the decision gate and sub-packets.
+- `docs/project-status.md` only if the recommended next implementation wave needs to name the decision gate.
 
 ## Open Questions
-- `status:needs-decision` until LT-009 is complete and the owner decides whether custom lessons should be imported into browser state or remain commit-only for another wave.
-- Decide whether this should be split into two slices: storage/migration first, then UI import/rendering.
+- `status:needs-decision`: Does the owner want browser-local custom lesson storage now, or should generated lessons remain commit-only seeded content until more real study sessions prove the workflow?
+- If approved, should local custom lesson IDs use a reserved prefix such as `custom-lesson-` to avoid collisions with seeded lesson IDs?
+- If approved, should local custom lessons be limited to phrase IDs that already exist in seeded `phrases`, or may a later slice introduce custom phrase records?
 
 ## Slash Goal Prompt
 
 ```text
-/goal Refine or implement LT-010 Local Custom Lesson Storage only after LT-009 is complete.
+/goal Decide LT-010 Local Custom Lesson Storage.
 
-Read AGENTS.md, README.md, docs/project-status.md, docs/playbooks/agentic-development.md, docs/backlog/local-first-roadmap.md, planning/issues/LT-010-local-custom-lesson-storage.md, planning/issues/LT-009-commit-worthy-lesson-workflow.md, .codex/skills/teach-polish/LESSON-FORMAT.md, lib/types.ts, lib/storage.ts, lib/snapshot.ts, lib/polish-content.ts, app/lesson/page.tsx, app/progress/page.tsx, and app/settings/page.tsx.
+Read AGENTS.md, README.md, docs/project-status.md, docs/playbooks/agentic-development.md, docs/backlog/local-first-roadmap.md, docs/playbooks/commit-worthy-lessons.md, planning/issues/LT-010-local-custom-lesson-storage.md, planning/issues/LT-010A-local-custom-lesson-storage-decision.md, planning/issues/LT-010B-custom-lesson-schema-migration.md, planning/issues/LT-010C-custom-lesson-import-validation.md, planning/issues/LT-010D-custom-lesson-rendering-completion.md, planning/issues/LT-010E-custom-lesson-snapshot-export-compatibility.md, planning/issues/LT-010F-custom-lesson-docs-workflow.md, planning/issues/LT-009-commit-worthy-lesson-workflow.md, .codex/skills/teach-polish/LESSON-FORMAT.md, .codex/skills/teach-polish/resources/learner-snapshot-schema.md, lib/types.ts, lib/storage.ts, lib/snapshot.ts, lib/polish-content.ts, app/lesson/page.tsx, app/progress/page.tsx, and app/settings/page.tsx.
 
-If LT-009 is not complete or the owner has not chosen browser-local custom lesson storage over commit-only lessons, stop and mark this status:needs-decision. If approved, implement the smallest local-only custom lesson storage slice with old-state migration, raw export/import preservation, lesson rendering, completion logging, and snapshot summary support. Do not add runtime AI, cloud, auth, hosting, paid APIs, profiles, or another language module.
-
-Validate with npm run typecheck and npm run build. Manually test old-state load/import, custom lesson add/import, custom lesson completion, raw export/import round trip, and learner snapshot summary. Browser-smoke /lesson, /progress, /settings, and any new custom lesson view.
+Do not implement app behavior in the decision slice. Decide whether browser-local custom lesson storage should proceed now or whether generated lessons should remain commit-only seeded content for another wave. If approved, start with LT-010B. Do not add runtime AI, cloud, auth, hosting, paid APIs, backend routes, sync, learner data upload, profiles, or another language module.
 ```
