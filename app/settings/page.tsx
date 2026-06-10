@@ -1,9 +1,10 @@
 "use client";
 
-import { Check, Copy, Download, RotateCcw, Upload } from "lucide-react";
+import { AlertCircle, Check, Copy, Download, FilePlus, RotateCcw, Upload } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 import { PageHeader } from "@/components/PageHeader";
 import { useAppState } from "@/components/useAppState";
+import { importGeneratedDrillFile } from "@/lib/generated-drills";
 import { createLearnerSnapshot, exportLearnerSnapshot } from "@/lib/snapshot";
 import { exportState, importState, resetState } from "@/lib/storage";
 import type { LearnerSnapshot, PracticeLog, QuizMiss, SnapshotPhrase } from "@/lib/types";
@@ -15,7 +16,7 @@ Read the learner snapshot JSON below. Based only on this snapshot, choose one fo
 
 Keep it practical for home/family Polish. End with one thing to say at home today and one thing to log back in the app.
 
-This is a manual local-first copy/paste handoff. Do not add runtime API calls, backend routes, cloud sync, auth, or generated content import.
+This is a manual local-first copy/paste handoff. Do not add runtime API calls, backend routes, cloud sync, or auth. If you create a drill, include the App-Ready JSON payload from /teach-polish so it can be imported locally.
 
 Learner snapshot:
 
@@ -195,6 +196,8 @@ export default function SettingsPage() {
   const [state, setState] = useAppState();
   const [codexPrompt, setCodexPrompt] = useState("");
   const [copyStatus, setCopyStatus] = useState<"idle" | "copied" | "manual">("idle");
+  const [rawImportStatus, setRawImportStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const [drillImportStatus, setDrillImportStatus] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const snapshot = useMemo(() => (state ? createLearnerSnapshot(state) : null), [state]);
 
   async function copyCodexTutorPrompt() {
@@ -247,7 +250,44 @@ export default function SettingsPage() {
                 accept="application/json"
                 onChange={async (event) => {
                   const file = event.target.files?.[0];
-                  if (file) setState(await importState(file));
+                  if (!file) return;
+                  try {
+                    const imported = await importState(file);
+                    setState(imported);
+                    setRawImportStatus({ type: "success", message: "Raw JSON imported." });
+                  } catch {
+                    setRawImportStatus({ type: "error", message: "Raw JSON import failed. Your current local progress was not changed." });
+                  } finally {
+                    event.currentTarget.value = "";
+                  }
+                }}
+              />
+            </label>
+            <label className="secondary-button cursor-pointer justify-start">
+              <FilePlus size={18} /> Import Generated Drill
+              <input
+                className="hidden"
+                type="file"
+                accept="application/json,.json,.md,.markdown,text/markdown"
+                onChange={async (event) => {
+                  const file = event.target.files?.[0];
+                  if (!file || !state) return;
+                  try {
+                    const imported = await importGeneratedDrillFile(state, file);
+                    setState(imported);
+                    const importedDrill = imported.generatedDrills.items[0]?.drill;
+                    setDrillImportStatus({
+                      type: "success",
+                      message: importedDrill ? `Imported generated drill: ${importedDrill.title}.` : "Generated drill imported."
+                    });
+                  } catch (error) {
+                    setDrillImportStatus({
+                      type: "error",
+                      message: error instanceof Error ? error.message : "Generated drill import failed."
+                    });
+                  } finally {
+                    event.currentTarget.value = "";
+                  }
                 }}
               />
             </label>
@@ -262,8 +302,28 @@ export default function SettingsPage() {
             </button>
           </div>
           <p className="mt-3 text-xs text-ink/60">
-            Copies a local prompt packet for manual Codex use. Nothing is sent from the app.
+            Copies a local prompt packet for manual Codex use. Generated drills import from local files only. Nothing is sent from the app.
           </p>
+          {rawImportStatus ? (
+            <p
+              className={`mt-3 flex items-start gap-2 rounded-md p-3 text-sm ${
+                rawImportStatus.type === "success" ? "bg-moss/10 text-moss" : "bg-tomato/10 text-tomato"
+              }`}
+            >
+              {rawImportStatus.type === "success" ? <Check size={18} /> : <AlertCircle size={18} />}
+              <span>{rawImportStatus.message}</span>
+            </p>
+          ) : null}
+          {drillImportStatus ? (
+            <p
+              className={`mt-3 flex items-start gap-2 rounded-md p-3 text-sm ${
+                drillImportStatus.type === "success" ? "bg-moss/10 text-moss" : "bg-tomato/10 text-tomato"
+              }`}
+            >
+              {drillImportStatus.type === "success" ? <Check size={18} /> : <AlertCircle size={18} />}
+              <span>{drillImportStatus.message}</span>
+            </p>
+          ) : null}
           {codexPrompt ? (
             <div className="mt-3">
               <div className="mb-2 flex flex-wrap items-center gap-2">

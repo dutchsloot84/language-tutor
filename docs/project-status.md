@@ -24,7 +24,8 @@ The project is proving that a useful adaptive tutor can work with:
 3. Learner previews, exports, or copies a tutor packet from Settings & Data.
 4. Codex reads the snapshot with `/teach-polish`.
 5. Codex generates a next lesson, drill, progress review, or content update.
-6. Useful generated lesson content passes `docs/playbooks/commit-worthy-lessons.md` before it is committed back to the repo.
+6. Generated drill JSON is imported locally for retry practice.
+7. Useful generated lesson content passes `docs/playbooks/commit-worthy-lessons.md` before it is committed back to the repo.
 
 ## Recently Completed
 
@@ -35,6 +36,7 @@ The project is proving that a useful adaptive tutor can work with:
 - Progress proof scorecard for local miss, retry, known, and home-use signals.
 - `/teach-polish` snapshot schema docs.
 - README documentation for the adaptive tutor loop.
+- Generated drill format and local generated drill JSON import.
 - Commit-worthy lesson workflow for reviewing generated lessons before seeded-content commits.
 
 ## Active Constraints
@@ -54,22 +56,23 @@ Prove the adaptive loop over several real study sessions:
 - export snapshots
 - preview what Codex will read
 - generate next drills
+- import generated drill JSON locally for retry practice
 - prioritize quiz misses and review misses
 - log real home usage and corrections as secondary context
 - manually add only the most useful generated content
 
 ## Current Top Backlog
 
-1. Generated drill format.
-2. Generated drill import.
-3. Local custom lesson storage decision.
-4. Language module boundary.
+1. Local custom lesson storage decision.
+2. Language module boundary.
+3. Snapshot history.
+4. Local backup package.
 
 ## Recommended Next Implementation Wave
 
-1. LT-007 Generated Drill Format.
-2. LT-008 Generated Drill Import after LT-007 lands.
-3. Decide LT-010 Local Custom Lesson Storage only after the commit-worthy lesson workflow is proven useful in review.
+1. Decide LT-010 Local Custom Lesson Storage only after the commit-worthy lesson workflow is proven useful in review.
+2. LT-011 Language Module Boundary.
+3. LT-012 Snapshot History.
 
 LT-010 Local Custom Lesson Storage should stay `status:needs-decision` until the commit-worthy lesson workflow is proven and the owner chooses browser-local custom lessons over continuing commit-only seeded lessons.
 

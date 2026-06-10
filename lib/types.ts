@@ -111,7 +111,7 @@ export type PracticeLog = {
   retryDate?: string;
   retryHint?: string;
   lessonId?: string;
-  weakArea?: WeakAreaId;
+  weakArea?: WeakAreaId | string;
   reviewOutcome?: PhraseStatus;
   quizMisses?: QuizMiss[];
   note?: string;
@@ -134,6 +134,86 @@ export type WeakAreaId =
   | "home-usage"
   | "confidence-hesitation";
 
+export type GeneratedDrillLevel = "A2" | "A2+" | "B1";
+
+export type GeneratedDrillSourceEvidence = {
+  type: "snapshot-field" | "skill-record" | "user-correction" | "user-request" | (string & {});
+  ref: string;
+  summary: string;
+  quote?: string;
+};
+
+export type GeneratedDrillExample = {
+  pl: string;
+  en: string;
+  pron: string;
+  tags?: string[];
+  sourceRef?: string;
+};
+
+export type GeneratedDrillPrompt = {
+  id: string;
+  prompt: string;
+  expected: string;
+  acceptedAnswers?: string[];
+  weakArea?: WeakAreaId | string;
+  hint?: string;
+};
+
+export type GeneratedDrill = {
+  schema: "language-tutor-generated-drill-v1";
+  generatedAt: string;
+  app: {
+    name: "Language Tutor";
+    module: "polish";
+    language: "pl";
+    stateVersion?: AppState["version"];
+  };
+  id: string;
+  title: string;
+  level: GeneratedDrillLevel;
+  weakArea: WeakAreaId | string;
+  sourceEvidence: GeneratedDrillSourceEvidence[];
+  focus: string;
+  tinyExplanation: string;
+  examples: GeneratedDrillExample[];
+  quickPrompts: GeneratedDrillPrompt[];
+  speakingTask: {
+    instruction: string;
+    durationMinutes?: number;
+    audience?: "wife" | "kids" | "self" | (string & {});
+  };
+  useToday: string;
+  retryPlan: {
+    retryAfterDays?: number;
+    retryPrompt: string;
+    logType?: PracticeLogType | string;
+  };
+  proofOfUse: {
+    successSignal: string;
+    logSuggestion?: {
+      type?: PracticeLogType | string;
+      summary?: string;
+    };
+  };
+  reviewCards: {
+    pl: string;
+    en: string;
+  }[];
+  description?: string;
+  tags?: string[];
+};
+
+export type GeneratedDrillRecord = {
+  importedAt: string;
+  drill: GeneratedDrill;
+};
+
+export type GeneratedDrillCollection = {
+  version: 1;
+  items: GeneratedDrillRecord[];
+};
+
 export type AppState = {
   version: 1;
   profile: LearnerProfile;
@@ -144,6 +224,7 @@ export type AppState = {
   weakAreas: Record<string, number>;
   practiceLogs: PracticeLog[];
   notes: Record<string, string>;
+  generatedDrills: GeneratedDrillCollection;
   streak: {
     lastPracticeDate?: string;
     count: number;
