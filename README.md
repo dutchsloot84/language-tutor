@@ -115,6 +115,33 @@ cp -R .codex/skills/teach-polish ~/.agents/skills/teach-polish
 
 Prefer the project-local copy while iterating, then copy globally once the workflow feels right.
 
+## Agentic Development Workflow
+
+This repo includes a lightweight Codex/agent workflow inspired by the Field IQ project, scaled down for a personal local-first tutor.
+
+Start with:
+
+```text
+AGENTS.md
+docs/project-status.md
+docs/playbooks/agentic-development.md
+docs/backlog/local-first-roadmap.md
+```
+
+Use:
+
+- `docs/templates/refined-issue-template.md` for bounded improvement slices
+- `docs/templates/codex-task-template.md` for implementation handoffs
+- `docs/templates/adr-template.md` before cloud, auth, API, sync, or hosting decisions
+- `planning/issues/` for execution-ready work
+- `planning/verification/` for durable validation notes when a slice needs them
+
+Current recommended next slice:
+
+```text
+planning/issues/LT-001-snapshot-preview.md
+```
+
 ## Learning Records
 
 Skill records are markdown files under:
