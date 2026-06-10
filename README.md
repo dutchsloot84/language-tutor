@@ -161,7 +161,7 @@ App progress is browser-local and can be exported from Settings & Data as JSON. 
 
 ## Adaptive Tutor Loop
 
-Use Settings & Data to export `language-tutor-learner-snapshot-YYYY-MM-DD.json`. This is a compact tutor-facing summary, not the full raw app backup.
+Use Settings & Data to copy a Codex tutor prompt or export `language-tutor-learner-snapshot-YYYY-MM-DD.json`. The copied prompt includes tutor instructions plus the current learner snapshot. The snapshot is a compact tutor-facing summary, not the full raw app backup.
 
 The snapshot includes:
 
@@ -177,9 +177,9 @@ The snapshot includes:
 Recommended local loop:
 
 1. Use the app normally on your Mac or phone.
-2. In Settings & Data, export the learner snapshot.
-3. Ask Codex to use `/teach-polish` and read the snapshot.
-4. Have Codex generate the next lesson, drill, or progress review under `.codex/skills/teach-polish/`.
+2. In Settings & Data, copy the Codex tutor prompt or export the learner snapshot.
+3. Paste the prompt into Codex, or ask Codex to use `/teach-polish` and read the exported snapshot.
+4. Have Codex generate one focused next lesson, drill, or progress review under `.codex/skills/teach-polish/`.
 5. Add app-ready lessons manually for now in `lib/polish-content.ts`.
 
 Use raw `Export JSON` only for backup, restore, or moving browser state between devices.
