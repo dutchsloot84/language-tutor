@@ -1,0 +1,16 @@
+{
+  "name": "Polish Family Tutor",
+  "short_name": "Polish Tutor",
+  "description": "A local-first Polish learning app for practical family Polish.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbfaf7",
+  "theme_color": "#5e7a5b",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
