@@ -49,6 +49,13 @@ Runtime AI is out of scope until this manual loop becomes a real bottleneck.
 - Dependency: current miss-drill state on main from LT-003.
 - Execution packet: `planning/issues/LT-006-progress-proof-scorecard.md`
 
+### LT-009 Commit-Worthy Lesson Workflow
+- Outcome: document the path from snapshot to Codex lesson to committed seeded content.
+- Why: keep generated lessons inspectable before adding local custom lesson storage.
+- Dependency: gates LT-010.
+- Execution packet: `planning/issues/LT-009-commit-worthy-lesson-workflow.md`
+- Workflow: `docs/playbooks/commit-worthy-lessons.md`
+
 ## Next Useful Slices
 
 ### LT-007 Generated Drill Format
@@ -70,16 +77,6 @@ Runtime AI is out of scope until this manual loop becomes a real bottleneck.
   - imported drills persist locally
   - malformed JSON fails safely
   - imported drill appears in Practice
-
-### LT-009 Commit-Worthy Lesson Workflow
-- Outcome: document the path from snapshot to Codex lesson to committed seeded content.
-- Why: keep generated lessons inspectable before adding local custom lesson storage.
-- Dependency: should precede LT-010.
-- Execution packet: `planning/issues/LT-009-commit-worthy-lesson-workflow.md`
-- Acceptance:
-  - workflow doc exists
-  - lesson quality checklist exists
-  - examples name app-ready fields in `lib/polish-content.ts`
 
 ### LT-010 Local Custom Lesson Storage
 - Outcome: generated or hand-authored lessons can live in browser state.
