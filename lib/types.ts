@@ -107,6 +107,9 @@ export type PracticeLog = {
   language?: LanguageCode;
   phraseId?: string;
   phraseText?: string;
+  correctedPhraseText?: string;
+  retryDate?: string;
+  retryHint?: string;
   lessonId?: string;
   weakArea?: WeakAreaId;
   reviewOutcome?: PhraseStatus;

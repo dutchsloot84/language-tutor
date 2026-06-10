@@ -97,7 +97,15 @@ function PracticeLogExcerpt({ logs, notes }: { logs: PracticeLog[]; notes: Learn
           {logs.slice(0, 2).map((log) => (
             <li key={log.id} className="rounded-md bg-black/5 p-3 text-sm">
               <p className="font-semibold">{log.summary}</p>
+              {log.type === "correction" && log.correctedPhraseText ? (
+                <p className="mt-1 text-ink/60">
+                  Corrected: <span className="font-semibold">{log.correctedPhraseText}</span>
+                </p>
+              ) : null}
               {log.note ? <p className="mt-1 text-ink/60">{log.note}</p> : null}
+              {log.type === "correction" && (log.retryDate || log.retryHint) ? (
+                <p className="mt-1 text-xs font-semibold text-moss">{log.retryDate ? `Retry: ${log.retryDate}` : log.retryHint}</p>
+              ) : null}
               <p className="mt-1 text-xs text-ink/55">
                 {log.type} - {new Date(log.createdAt).toLocaleDateString()}
               </p>

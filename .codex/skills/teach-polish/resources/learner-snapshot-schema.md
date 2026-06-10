@@ -24,7 +24,7 @@ Use this snapshot as the bridge between the local-first Language Tutor app and `
 - `quiz.recentMisses`: recent missed prompts with expected answer, learner answer, and weak-area ID.
 - `weakAreas`: stable weak-area IDs with labels and counts.
 - `practiceLogs`: recent local practice events.
-- `recentCorrectionsAndNotes`: correction, hesitation, and note logs.
+- `recentCorrectionsAndNotes`: correction, hesitation, and note logs. New correction logs may include `phraseId`, original `phraseText`, `correctedPhraseText`, optional context `note`, `createdAt`, `retryDate`, and `retryHint`; older correction logs may only include the legacy summary/note fields.
 - `notes`: app notes keyed by phrase or record ID.
 - `tutorHints`: deterministic app-side suggestions.
 
@@ -36,7 +36,7 @@ Use this snapshot as the bridge between the local-first Language Tutor app and `
 - `speaking`: roleplay or speaking practice.
 - `note`: freeform note.
 - `used-at-home`: learner used a phrase in real life.
-- `correction`: wife corrected a phrase or usage.
+- `correction`: wife corrected a phrase or usage. Prefer logs with `correctedPhraseText` and `retryDate` when planning repair drills, but handle older correction logs without those fields.
 - `hesitation`: learner hesitated and wants more retrieval practice.
 
 ## Weak-Area IDs

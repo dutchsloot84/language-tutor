@@ -60,14 +60,22 @@ export default function PhrasebookPage() {
               if (!state) return;
               setState(replaceReview(state, scheduleReview(state.reviews[phrase.id], status)));
             }}
-            onLog={(type: PhrasePracticeLogType) => {
+            onLog={(type: PhrasePracticeLogType, details) => {
               if (!state) return;
-              const note =
-                type === "correction"
-                  ? window.prompt("What correction did you get?", "") ?? undefined
-                  : type === "hesitation"
-                    ? window.prompt("What made you hesitate?", "") ?? undefined
-                    : undefined;
+              if (type === "correction") {
+                setState(
+                  recordPhrasePractice(state, {
+                    phraseId: phrase.id,
+                    phraseText: phrase.pl,
+                    type,
+                    correctedPhraseText: details?.correctedPhraseText,
+                    note: details?.note
+                  })
+                );
+                return;
+              }
+
+              const note = type === "hesitation" ? window.prompt("What made you hesitate?", "")?.trim() || undefined : undefined;
               setState(recordPhrasePractice(state, { phraseId: phrase.id, phraseText: phrase.pl, type, note }));
             }}
           />
