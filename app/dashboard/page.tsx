@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen, Brain, MessageCircle, Play } from "lucide-react";
+import { BookOpen, Brain, MessageCircle, Play, Target } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { StatCard } from "@/components/StatCard";
 import { useAppState } from "@/components/useAppState";
@@ -59,6 +59,9 @@ export default function DashboardPage() {
             </Link>
             <Link className="secondary-button justify-start" href="/practice">
               <MessageCircle size={18} /> Practice speaking prompts
+            </Link>
+            <Link className="secondary-button justify-start" href="/practice/misses">
+              <Target size={18} /> Daily miss drill
             </Link>
             <Link className="secondary-button justify-start" href="/phrasebook">
               <BookOpen size={18} /> Browse family phrasebook
