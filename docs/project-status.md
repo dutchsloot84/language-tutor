@@ -58,13 +58,21 @@ Prove the adaptive loop over several real study sessions:
 
 ## Current Top Backlog
 
-1. Copy Codex tutor prompt.
-2. Wife correction retry flow.
-3. Progress proof scorecard.
-4. Generated drill format.
-5. Generated drill import.
-6. Commit-worthy lesson workflow.
-7. Language module boundary.
+1. Progress proof scorecard.
+2. Generated drill format.
+3. Generated drill import.
+4. Commit-worthy lesson workflow.
+5. Local custom lesson storage decision.
+6. Language module boundary.
+
+## Recommended Next Implementation Wave
+
+1. LT-006 Progress Proof Scorecard.
+2. LT-007 Generated Drill Format.
+3. LT-008 Generated Drill Import after LT-007 lands.
+4. LT-009 Commit-Worthy Lesson Workflow before deciding LT-010.
+
+LT-010 Local Custom Lesson Storage should stay `status:needs-decision` until the commit-worthy lesson workflow is proven and the owner chooses browser-local custom lessons over continuing commit-only seeded lessons.
 
 ## Expansion Gates
 

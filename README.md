@@ -140,7 +140,7 @@ Use:
 Current recommended next slice:
 
 ```text
-planning/issues/LT-001-snapshot-preview.md
+planning/issues/LT-006-progress-proof-scorecard.md
 ```
 
 ## Learning Records
