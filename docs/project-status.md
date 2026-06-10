@@ -32,6 +32,7 @@ The project is proving that a useful adaptive tutor can work with:
 - Practice logs for `used-at-home`, `correction`, and `hesitation`.
 - Quiz miss logging with weak-area IDs.
 - Daily miss drill for recent quiz misses and review misses.
+- Progress proof scorecard for local miss, retry, known, and home-use signals.
 - `/teach-polish` snapshot schema docs.
 - README documentation for the adaptive tutor loop.
 
@@ -58,19 +59,17 @@ Prove the adaptive loop over several real study sessions:
 
 ## Current Top Backlog
 
-1. Progress proof scorecard.
-2. Generated drill format.
-3. Generated drill import.
-4. Commit-worthy lesson workflow.
-5. Local custom lesson storage decision.
-6. Language module boundary.
+1. Generated drill format.
+2. Generated drill import.
+3. Commit-worthy lesson workflow.
+4. Local custom lesson storage decision.
+5. Language module boundary.
 
 ## Recommended Next Implementation Wave
 
-1. LT-006 Progress Proof Scorecard.
-2. LT-007 Generated Drill Format.
-3. LT-008 Generated Drill Import after LT-007 lands.
-4. LT-009 Commit-Worthy Lesson Workflow before deciding LT-010.
+1. LT-007 Generated Drill Format.
+2. LT-008 Generated Drill Import after LT-007 lands.
+3. LT-009 Commit-Worthy Lesson Workflow before deciding LT-010.
 
 LT-010 Local Custom Lesson Storage should stay `status:needs-decision` until the commit-worthy lesson workflow is proven and the owner chooses browser-local custom lessons over continuing commit-only seeded lessons.
 
