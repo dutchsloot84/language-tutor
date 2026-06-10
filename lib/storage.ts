@@ -4,7 +4,8 @@ import { phrases } from "./polish-content";
 import { createReviewItem, todayIso } from "./srs";
 import type { AppState, PhraseStatus, PracticeLog, ReviewItem } from "./types";
 
-const STORAGE_KEY = "polish-family-tutor-state-v1";
+const STORAGE_KEY = "language-tutor-state-v1";
+const LEGACY_STORAGE_KEY = "polish-family-tutor-state-v1";
 
 export function createInitialState(): AppState {
   return {
@@ -34,18 +35,20 @@ export function createInitialState(): AppState {
 
 export function loadState(): AppState {
   if (typeof window === "undefined") return createInitialState();
-  const raw = window.localStorage.getItem(STORAGE_KEY);
+  const raw = window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY);
   if (!raw) return createInitialState();
 
   try {
     const parsed = JSON.parse(raw) as AppState;
     const initial = createInitialState();
-    return {
+    const migrated = {
       ...initial,
       ...parsed,
       phraseStatuses: { ...initial.phraseStatuses, ...parsed.phraseStatuses },
       reviews: { ...initial.reviews, ...parsed.reviews }
     };
+    if (!window.localStorage.getItem(STORAGE_KEY)) saveState(migrated);
+    return migrated;
   } catch {
     return createInitialState();
   }

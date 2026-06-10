@@ -4,12 +4,12 @@ import { AppNav } from "@/components/AppNav";
 import { RegisterServiceWorker } from "@/components/RegisterServiceWorker";
 
 export const metadata: Metadata = {
-  title: "Polish Family Tutor",
-  description: "Local-first family Polish learning app",
+  title: "Language Tutor",
+  description: "Local-first language learning app",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "Polish Tutor",
+    title: "Lang Tutor",
     statusBarStyle: "default"
   }
 };

@@ -1,12 +1,13 @@
-# Polish Family Tutor
+# Language Tutor
 
-A local-first Polish learning app plus a project-local Codex skill, `/teach-polish`, for practical A2-to-B1 family Polish.
+A local-first language learning app. The first module is Polish, backed by a project-local Codex skill, `/teach-polish`, for practical A2-to-B1 family Polish.
 
 The first milestone is intentionally local and simple: run on your MacBook, open in a browser, complete a sample lesson, review flashcards, take a quiz, and keep progress saved in the same browser.
 
 ## What Is Included
 
 - Next.js + TypeScript mobile-first PWA
+- Polish as the first language module
 - Local browser persistence with `localStorage`
 - Dashboard, Today’s Lesson, Flashcards, Phrasebook, Practice, Quiz, Progress, Glossary, Settings/Data
 - 120 starter family/home Polish phrases
@@ -65,6 +66,15 @@ http://YOUR_MAC_IP:3000
 ```
 
 Your phone and Mac browser will keep separate local progress unless you export/import JSON from Settings & Data.
+
+## Language Modules
+
+The current app content is Polish-first. The repo is named and structured as `Language Tutor` so future modules can add Japanese or other languages without changing the product identity.
+
+Near-term module direction:
+
+- Polish: practical family/home Polish, A2 to B1
+- Japanese: future module, likely separate curriculum, scripts, writing system support, and `/teach-japanese` skill
 
 ## `/teach-polish` Skill
 

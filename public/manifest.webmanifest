@@ -1,7 +1,7 @@
 {
-  "name": "Polish Family Tutor",
-  "short_name": "Polish Tutor",
-  "description": "A local-first Polish learning app for practical family Polish.",
+  "name": "Language Tutor",
+  "short_name": "Lang Tutor",
+  "description": "A local-first language learning app with practical daily study modules.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fbfaf7",

@@ -23,7 +23,7 @@ export default function DashboardPage() {
 
   return (
     <main className="page-shell">
-      <PageHeader title="Polish Family Tutor" eyebrow="Local-first A2 to B1">
+      <PageHeader title="Language Tutor" eyebrow="Polish module · Local-first A2 to B1">
         <Link href="/lesson" className="action-button">
           <Play size={18} /> Start today
         </Link>
