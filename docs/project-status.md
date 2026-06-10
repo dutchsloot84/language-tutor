@@ -63,18 +63,19 @@ Prove the adaptive loop over several real study sessions:
 
 ## Current Top Backlog
 
-1. Local custom lesson storage decision.
-2. Language module boundary.
-3. Snapshot history.
-4. Local backup package.
+1. Language module boundary.
+2. Snapshot history.
+3. Local backup package.
+4. Local custom lesson storage remains deferred.
 
 ## Recommended Next Implementation Wave
 
-1. Decide LT-010 Local Custom Lesson Storage only after the commit-worthy lesson workflow is proven useful in review.
-2. LT-011 Language Module Boundary.
-3. LT-012 Snapshot History.
+1. LT-011 Language Module Boundary.
+2. LT-012 Snapshot History.
+3. LT-013 Local Backup Package.
+4. Continue proving generated lessons through the LT-009 commit-worthy seeded lesson workflow before reopening LT-010.
 
-LT-010 Local Custom Lesson Storage should stay `status:needs-decision` until the commit-worthy lesson workflow is proven and the owner chooses browser-local custom lessons over continuing commit-only seeded lessons.
+LT-010 Local Custom Lesson Storage is deferred by owner decision on 2026-06-10. Keep generated lessons commit-only for now to preserve app simplicity. Reopen LT-010A only after there is a concrete reviewed lesson that should live in browser-local custom lesson storage.
 
 ## Expansion Gates
 
