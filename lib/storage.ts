@@ -1,7 +1,7 @@
 "use client";
 
 import { phrases } from "./polish-content";
-import { createReviewItem, todayIso } from "./srs";
+import { addDaysIso, createReviewItem, todayIso } from "./srs";
 import type { AppState, PhraseStatus, PracticeLog, ReviewItem, WeakAreaId } from "./types";
 
 const STORAGE_KEY = "language-tutor-state-v1";
@@ -33,6 +33,41 @@ export function createInitialState(): AppState {
   };
 }
 
+function normalizePracticeLog(log: PracticeLog): PracticeLog {
+  if (log.type !== "correction") return log;
+
+  const summary = typeof log.summary === "string" ? log.summary : "Wife corrected me";
+
+  return {
+    ...log,
+    summary,
+    phraseText: log.phraseText ?? summary.replace(/^Wife corrected me:\s*/, ""),
+    retryHint: log.retryDate ? log.retryHint : log.retryHint ?? "Retry this correction in the next practice session."
+  };
+}
+
+function migrateState(parsed: Partial<AppState>): AppState {
+  const initial = createInitialState();
+  const practiceLogs = Array.isArray(parsed.practiceLogs)
+    ? parsed.practiceLogs.map((log) => normalizePracticeLog(log as PracticeLog))
+    : initial.practiceLogs;
+
+  return {
+    ...initial,
+    ...parsed,
+    version: 1,
+    profile: { ...initial.profile, ...parsed.profile },
+    phraseStatuses: { ...initial.phraseStatuses, ...parsed.phraseStatuses },
+    reviews: { ...initial.reviews, ...parsed.reviews },
+    lessonAttempts: parsed.lessonAttempts ?? initial.lessonAttempts,
+    quizScores: parsed.quizScores ?? initial.quizScores,
+    weakAreas: parsed.weakAreas ?? initial.weakAreas,
+    practiceLogs,
+    notes: parsed.notes ?? initial.notes,
+    streak: { ...initial.streak, ...parsed.streak }
+  };
+}
+
 export function loadState(): AppState {
   if (typeof window === "undefined") return createInitialState();
   const raw = window.localStorage.getItem(STORAGE_KEY) ?? window.localStorage.getItem(LEGACY_STORAGE_KEY);
@@ -40,21 +75,7 @@ export function loadState(): AppState {
 
   try {
     const parsed = JSON.parse(raw) as Partial<AppState>;
-    const initial = createInitialState();
-    const migrated: AppState = {
-      ...initial,
-      ...parsed,
-      version: 1,
-      profile: { ...initial.profile, ...parsed.profile },
-      phraseStatuses: { ...initial.phraseStatuses, ...parsed.phraseStatuses },
-      reviews: { ...initial.reviews, ...parsed.reviews },
-      lessonAttempts: parsed.lessonAttempts ?? initial.lessonAttempts,
-      quizScores: parsed.quizScores ?? initial.quizScores,
-      weakAreas: parsed.weakAreas ?? initial.weakAreas,
-      practiceLogs: parsed.practiceLogs ?? initial.practiceLogs,
-      notes: parsed.notes ?? initial.notes,
-      streak: { ...initial.streak, ...parsed.streak }
-    };
+    const migrated = migrateState(parsed);
     if (!window.localStorage.getItem(STORAGE_KEY)) saveState(migrated);
     return migrated;
   } catch {
@@ -102,6 +123,7 @@ export function recordPhrasePractice(
     phraseId: string;
     type: "used-at-home" | "correction" | "hesitation";
     phraseText: string;
+    correctedPhraseText?: string;
     note?: string;
   }
 ): AppState {
@@ -112,6 +134,12 @@ export function recordPhrasePractice(
     correction: "Wife corrected me",
     hesitation: "Hesitated on this"
   };
+
+  const retryDate = input.type === "correction" ? addDaysIso(1) : undefined;
+  const correctionSummary =
+    input.type === "correction" && input.correctedPhraseText
+      ? `${labels[input.type]}: ${input.phraseText} -> ${input.correctedPhraseText}`
+      : `${labels[input.type]}: ${input.phraseText}`;
 
   return recordPractice(
     {
@@ -128,8 +156,12 @@ export function recordPhrasePractice(
       type: input.type,
       language: "pl",
       phraseId: input.phraseId,
+      phraseText: input.phraseText,
+      correctedPhraseText: input.correctedPhraseText,
+      retryDate,
+      retryHint: retryDate ? `Retry on ${retryDate}.` : undefined,
       weakArea,
-      summary: `${labels[input.type]}: ${input.phraseText}`,
+      summary: correctionSummary,
       note: input.note
     }
   );
@@ -155,7 +187,8 @@ export function exportState(state: AppState) {
 
 export async function importState(file: File): Promise<AppState> {
   const text = await file.text();
-  const parsed = JSON.parse(text) as AppState;
-  saveState(parsed);
-  return parsed;
+  const parsed = JSON.parse(text) as Partial<AppState>;
+  const migrated = migrateState(parsed);
+  saveState(migrated);
+  return migrated;
 }
