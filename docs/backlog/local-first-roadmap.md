@@ -43,18 +43,13 @@ Runtime AI is out of scope until this manual loop becomes a real bottleneck.
 - Primary signal: correction logs and retry status.
 - Execution packet: `planning/issues/LT-005-wife-correction-retry-flow.md`
 
-## Next Useful Slices
-
 ### LT-006 Progress Proof Scorecard
 - Outcome: Progress page shows whether the adaptive loop is working over time.
 - Why: prove behavior change, not just feature count.
 - Dependency: current miss-drill state on main from LT-003.
 - Execution packet: `planning/issues/LT-006-progress-proof-scorecard.md`
-- Acceptance:
-  - tracks repeated misses improving
-  - tracks `used-at-home` count
-  - tracks hard/review phrases becoming known
-  - keeps all data local
+
+## Next Useful Slices
 
 ### LT-007 Generated Drill Format
 - Outcome: `/teach-polish` has a stable markdown/JSON drill format for app-ready generated drills.
