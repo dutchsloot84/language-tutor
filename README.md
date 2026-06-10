@@ -168,6 +168,7 @@ The snapshot includes:
 - completed lessons and quiz scores
 - known, hard, and needs-review phrases
 - due review queue
+- repeated flashcard review misses
 - recent quiz misses
 - weak areas
 - practice logs, including used-at-home, wife-correction, and hesitation events

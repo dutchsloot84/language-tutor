@@ -2,7 +2,7 @@
 
 import { lessons, phrases } from "./polish-content";
 import { todayIso } from "./srs";
-import type { AppState, LearnerSnapshot, PracticeLog, QuizMiss, SnapshotPhrase, WeakAreaId } from "./types";
+import type { AppState, LearnerSnapshot, PracticeLog, QuizMiss, ReviewMissEvidence, SnapshotPhrase, WeakAreaId } from "./types";
 
 const weakAreaLabels: Record<WeakAreaId, string> = {
   "gender-agreement": "Gender agreement",
@@ -42,6 +42,67 @@ function toSnapshotPhrase(state: AppState, phraseId: string): SnapshotPhrase | n
 
 function collectRecentQuizMisses(logs: PracticeLog[]) {
   return logs.flatMap((log) => log.quizMisses ?? []).slice(0, 20);
+}
+
+function collectReviewMisses(state: AppState): ReviewMissEvidence[] {
+  const loggedMisses = new Map<
+    string,
+    {
+      count: number;
+      lastMissedAt?: string;
+      status?: ReviewMissEvidence["status"];
+    }
+  >();
+
+  for (const log of state.practiceLogs) {
+    if (
+      log.type !== "flashcard" ||
+      log.weakArea !== "phrase-recall" ||
+      (log.reviewOutcome !== "hard" && log.reviewOutcome !== "needs-review") ||
+      !log.phraseId
+    ) {
+      continue;
+    }
+
+    const current = loggedMisses.get(log.phraseId);
+    loggedMisses.set(log.phraseId, {
+      count: (current?.count ?? 0) + 1,
+      lastMissedAt:
+        !current?.lastMissedAt || log.createdAt.localeCompare(current.lastMissedAt) > 0 ? log.createdAt : current.lastMissedAt,
+      status: log.reviewOutcome
+    });
+  }
+
+  return Object.values(state.reviews)
+    .filter((review) => review.misses > 0 || loggedMisses.has(review.phraseId))
+    .flatMap((review): ReviewMissEvidence[] => {
+      const phrase = phrases.find((item) => item.id === review.phraseId);
+      if (!phrase) return [];
+      const logged = loggedMisses.get(review.phraseId);
+      const status =
+        review.status === "hard" || review.status === "needs-review" ? review.status : logged?.status ?? "needs-review";
+      const loggedCount = logged?.count ?? 0;
+      const evidence: ReviewMissEvidence = {
+        phraseId: phrase.id,
+        phraseText: phrase.pl,
+        translation: phrase.en,
+        language: "pl" as const,
+        weakArea: "phrase-recall" as const,
+        status,
+        count: Math.max(review.misses, loggedCount),
+        srsMisses: review.misses,
+        loggedMisses: loggedCount
+      };
+      if (logged?.lastMissedAt) evidence.lastMissedAt = logged.lastMissedAt;
+      return [evidence];
+    })
+    .sort(
+      (a, b) =>
+        b.count - a.count ||
+        (b.lastMissedAt ?? "").localeCompare(a.lastMissedAt ?? "") ||
+        a.translation.localeCompare(b.translation)
+    )
+    .slice(0, 30);
 }
 
 function dueReviewQueue(state: AppState) {
@@ -86,6 +147,7 @@ export function createLearnerSnapshot(state: AppState): LearnerSnapshot {
   const needsReview = statusList(state, "needs-review");
   const reviewQueue = dueReviewQueue(state);
   const recentMisses = collectRecentQuizMisses(state.practiceLogs);
+  const reviewMisses = collectReviewMisses(state);
   const recentCorrectionsAndNotes = state.practiceLogs
     .filter((log) => log.type === "correction" || log.type === "hesitation" || log.type === "note")
     .slice(0, 20);
@@ -128,6 +190,7 @@ export function createLearnerSnapshot(state: AppState): LearnerSnapshot {
       needsReview
     },
     reviewQueue,
+    reviewMisses,
     quiz: {
       scoresByLesson: state.quizScores,
       recentMisses
