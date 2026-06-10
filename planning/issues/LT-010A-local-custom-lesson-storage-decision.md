@@ -6,7 +6,7 @@
 - Trust label: `trust:human-signoff`
 - Priority: P1
 - Owner: Shayne
-- Status: `status:needs-decision`
+- Status: `status:deferred`
 
 ## Problem
 
@@ -20,6 +20,8 @@ Make an explicit owner decision:
 
 - Proceed with browser-local custom lesson storage, starting with LT-010B.
 - Or keep generated lessons commit-only for now and leave LT-010B through LT-010F parked.
+
+Decision recorded 2026-06-10: defer browser-local custom lesson storage to keep the app simpler for now. Continue using the LT-009 commit-worthy lesson workflow for generated lessons that deserve to become seeded content.
 
 ## Scope
 - In scope:
@@ -47,13 +49,13 @@ Make an explicit owner decision:
 - `lib/polish-content.ts`
 
 ## Acceptance Criteria
-- [ ] Owner explicitly chooses `proceed` or `defer`.
+- [x] Owner explicitly chooses `proceed` or `defer`.
 - [ ] Before `proceed`, record evidence that LT-009 was used to evaluate or commit at least one generated lesson, or record an explicit owner waiver explaining why browser-local custom lessons should proceed before that proof.
 - [ ] Before `proceed`, name one reviewed lesson example tied to snapshot or user evidence, the expected local practice behavior, and the expected proof signal in Progress or learner snapshot.
 - [ ] If proceeding, owner confirms local custom lessons are browser-local only and manual raw JSON export/import is the only backup/transfer path.
 - [ ] If proceeding, owner confirms custom lessons initially reference existing seeded phrase IDs only, unless a new custom phrase slice is created.
 - [ ] If proceeding, owner confirms custom lesson IDs should not collide with seeded lesson IDs, preferably by using a reserved prefix.
-- [ ] If deferring, roadmap/status docs keep LT-010 parked and point back to commit-worthy seeded lesson workflow.
+- [x] If deferring, roadmap/status docs keep LT-010 parked and point back to commit-worthy seeded lesson workflow.
 
 ## Data And Privacy Check
 - Local-only data touched: none; decision only.
@@ -75,9 +77,10 @@ Make an explicit owner decision:
 - `docs/backlog/local-first-roadmap.md` if LT-010 is deferred or approved.
 
 ## Open Questions
-- `status:needs-decision`: proceed with browser-local custom lessons now, or defer?
-- Should local custom lessons initially be constrained to existing seeded phrases only?
-- Should the app reserve `custom-lesson-` as the local custom lesson ID prefix?
+- None for now. LT-010 is deferred.
+- Reopen the proceed-only questions if the owner later chooses browser-local custom lessons:
+  - Should local custom lessons initially be constrained to existing seeded phrases only?
+  - Should the app reserve `custom-lesson-` as the local custom lesson ID prefix?
 
 ## Slash Goal Prompt
 

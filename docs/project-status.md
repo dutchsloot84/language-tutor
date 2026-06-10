@@ -62,17 +62,16 @@ Prove the adaptive loop over several real study sessions:
 
 1. Generated drill format.
 2. Generated drill import.
-3. Local custom lesson storage decision.
-4. Language module boundary.
+3. Language module boundary.
+4. Local custom lesson storage remains deferred.
 
 ## Recommended Next Implementation Wave
 
 1. LT-007 Generated Drill Format.
 2. LT-008 Generated Drill Import after LT-007 lands.
-3. LT-010A Local Custom Lesson Storage Decision only after the commit-worthy lesson workflow is proven useful in review.
-4. If LT-010A is approved, LT-010B Custom Lesson Schema And Migration should be the first implementation slice.
+3. Continue proving generated lessons through the LT-009 commit-worthy seeded lesson workflow before reopening LT-010.
 
-LT-010 Local Custom Lesson Storage should stay `status:needs-decision` until the commit-worthy lesson workflow is proven and the owner chooses browser-local custom lessons over continuing commit-only seeded lessons.
+LT-010 Local Custom Lesson Storage is deferred by owner decision on 2026-06-10. Keep generated lessons commit-only for now to preserve app simplicity. Reopen LT-010A only after there is a concrete reviewed lesson that should live in browser-local custom lesson storage.
 
 ## Expansion Gates
 

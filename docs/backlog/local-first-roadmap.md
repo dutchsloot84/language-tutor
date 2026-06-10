@@ -82,7 +82,7 @@ Runtime AI is out of scope until this manual loop becomes a real bottleneck.
 - Outcome: generated or hand-authored lessons can live in browser state.
 - Why: useful only after generated lesson shape is proven.
 - Dependency: LT-009 and owner decision on browser-local custom lessons vs commit-only lessons.
-- Status: needs decision before implementation.
+- Status: deferred by owner decision on 2026-06-10 to keep the app simpler for now.
 - Execution packet: `planning/issues/LT-010-local-custom-lesson-storage.md`
 - Decision gate: `planning/issues/LT-010A-local-custom-lesson-storage-decision.md`
 - Split packets:
@@ -92,7 +92,7 @@ Runtime AI is out of scope until this manual loop becomes a real bottleneck.
   - `planning/issues/LT-010E-custom-lesson-snapshot-export-compatibility.md`
   - `planning/issues/LT-010F-custom-lesson-docs-workflow.md`
 - Acceptance:
-  - owner explicitly approves browser-local custom lesson storage before implementation
+  - owner explicitly reopens and approves browser-local custom lesson storage before implementation
   - local lessons render with seeded lessons
   - export/import includes local lessons
   - snapshot includes local lesson attempts
