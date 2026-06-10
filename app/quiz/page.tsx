@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { useAppState } from "@/components/useAppState";
 import { lessons, phrases } from "@/lib/polish-content";
 import { recordPractice } from "@/lib/storage";
-import type { QuizQuestion } from "@/lib/types";
+import type { QuizMiss, QuizQuestion, WeakAreaId } from "@/lib/types";
 
 type QuizResult = {
   score: number;
@@ -36,6 +36,13 @@ function isCorrectAnswer(question: QuizQuestion, answer: string) {
 function acceptedAnswerText(question: QuizQuestion) {
   const accepted = question.acceptedAnswers?.length ? question.acceptedAnswers : [question.answer];
   return Array.from(new Set(accepted)).join(" / ");
+}
+
+function weakAreaForQuestion(question: QuizQuestion): WeakAreaId {
+  if (question.type === "missing-word") return "cases-endings";
+  if (question.type === "translate-en-pl") return "phrase-recall";
+  if (question.type === "translate-pl-en") return "listening-pronunciation";
+  return "phrase-recall";
 }
 
 function answerVariantsForPhrase(phraseId: string) {
@@ -82,11 +89,22 @@ export default function QuizPage() {
     let correct = 0;
     const byQuestion: Record<string, boolean> = {};
     const weakAreas = { ...state.weakAreas };
+    const quizMisses: QuizMiss[] = [];
     for (const question of questions) {
       const ok = isCorrectAnswer(question, answers[question.id] ?? "");
       byQuestion[question.id] = ok;
       if (ok) correct += 1;
-      if (!ok) weakAreas[lesson.title] = (weakAreas[lesson.title] ?? 0) + 1;
+      if (!ok) {
+        const weakArea = weakAreaForQuestion(question);
+        weakAreas[weakArea] = (weakAreas[weakArea] ?? 0) + 1;
+        quizMisses.push({
+          questionId: question.id,
+          prompt: question.prompt,
+          expected: acceptedAnswerText(question),
+          given: answers[question.id],
+          weakArea
+        });
+      }
     }
     const percent = Math.round((correct / questions.length) * 100);
     setResult({
@@ -105,7 +123,7 @@ export default function QuizPage() {
             [lesson.id]: [...(state.quizScores[lesson.id] ?? []), percent]
           }
         },
-        { type: "quiz", summary: `${lesson.title}: ${percent}%` }
+        { type: "quiz", language: "pl", lessonId: lesson.id, summary: `${lesson.title}: ${percent}%`, quizMisses }
       )
     );
     window.setTimeout(() => resultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 0);

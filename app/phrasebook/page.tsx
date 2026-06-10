@@ -5,11 +5,12 @@ import { PageHeader } from "@/components/PageHeader";
 import { PhraseCard } from "@/components/PhraseCard";
 import { useAppState } from "@/components/useAppState";
 import { categoryLabels, phrases } from "@/lib/polish-content";
-import { replaceReview } from "@/lib/storage";
+import { recordPhrasePractice, replaceReview } from "@/lib/storage";
 import { scheduleReview } from "@/lib/srs";
-import type { PhraseCategory } from "@/lib/types";
+import type { PhraseCategory, PracticeLogType } from "@/lib/types";
 
 const categories = Object.keys(categoryLabels) as PhraseCategory[];
+type PhrasePracticeLogType = Extract<PracticeLogType, "used-at-home" | "correction" | "hesitation">;
 
 export default function PhrasebookPage() {
   const [state, setState] = useAppState();
@@ -58,6 +59,16 @@ export default function PhrasebookPage() {
             onStatus={(status) => {
               if (!state) return;
               setState(replaceReview(state, scheduleReview(state.reviews[phrase.id], status)));
+            }}
+            onLog={(type: PhrasePracticeLogType) => {
+              if (!state) return;
+              const note =
+                type === "correction"
+                  ? window.prompt("What correction did you get?", "") ?? undefined
+                  : type === "hesitation"
+                    ? window.prompt("What made you hesitate?", "") ?? undefined
+                    : undefined;
+              setState(recordPhrasePractice(state, { phraseId: phrase.id, phraseText: phrase.pl, type, note }));
             }}
           />
         ))}

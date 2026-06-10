@@ -3,6 +3,7 @@
 import { Download, RotateCcw, Upload } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useAppState } from "@/components/useAppState";
+import { exportLearnerSnapshot } from "@/lib/snapshot";
 import { exportState, importState, resetState } from "@/lib/storage";
 
 export default function SettingsPage() {
@@ -27,6 +28,9 @@ export default function SettingsPage() {
         <div className="panel">
           <h2 className="text-lg font-bold">Data tools</h2>
           <div className="mt-4 grid gap-2">
+            <button className="action-button justify-start" onClick={() => state && exportLearnerSnapshot(state)}>
+              <Download size={18} /> Export Learner Snapshot
+            </button>
             <button className="secondary-button justify-start" onClick={() => state && exportState(state)}>
               <Download size={18} /> Export JSON
             </button>

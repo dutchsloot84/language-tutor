@@ -2,7 +2,7 @@
 
 import { phrases } from "./polish-content";
 import { createReviewItem, todayIso } from "./srs";
-import type { AppState, PhraseStatus, PracticeLog, ReviewItem } from "./types";
+import type { AppState, PhraseStatus, PracticeLog, ReviewItem, WeakAreaId } from "./types";
 
 const STORAGE_KEY = "language-tutor-state-v1";
 const LEGACY_STORAGE_KEY = "polish-family-tutor-state-v1";
@@ -39,13 +39,21 @@ export function loadState(): AppState {
   if (!raw) return createInitialState();
 
   try {
-    const parsed = JSON.parse(raw) as AppState;
+    const parsed = JSON.parse(raw) as Partial<AppState>;
     const initial = createInitialState();
-    const migrated = {
+    const migrated: AppState = {
       ...initial,
       ...parsed,
+      version: 1,
+      profile: { ...initial.profile, ...parsed.profile },
       phraseStatuses: { ...initial.phraseStatuses, ...parsed.phraseStatuses },
-      reviews: { ...initial.reviews, ...parsed.reviews }
+      reviews: { ...initial.reviews, ...parsed.reviews },
+      lessonAttempts: parsed.lessonAttempts ?? initial.lessonAttempts,
+      quizScores: parsed.quizScores ?? initial.quizScores,
+      weakAreas: parsed.weakAreas ?? initial.weakAreas,
+      practiceLogs: parsed.practiceLogs ?? initial.practiceLogs,
+      notes: parsed.notes ?? initial.notes,
+      streak: { ...initial.streak, ...parsed.streak }
     };
     if (!window.localStorage.getItem(STORAGE_KEY)) saveState(migrated);
     return migrated;
@@ -88,6 +96,45 @@ export function recordPractice(state: AppState, log: Omit<PracticeLog, "id" | "c
   };
 }
 
+export function recordPhrasePractice(
+  state: AppState,
+  input: {
+    phraseId: string;
+    type: "used-at-home" | "correction" | "hesitation";
+    phraseText: string;
+    note?: string;
+  }
+): AppState {
+  const weakArea: WeakAreaId =
+    input.type === "correction" ? "phrase-recall" : input.type === "hesitation" ? "confidence-hesitation" : "home-usage";
+  const labels = {
+    "used-at-home": "Used at home",
+    correction: "Wife corrected me",
+    hesitation: "Hesitated on this"
+  };
+
+  return recordPractice(
+    {
+      ...state,
+      weakAreas:
+        input.type === "used-at-home"
+          ? state.weakAreas
+          : {
+              ...state.weakAreas,
+              [weakArea]: (state.weakAreas[weakArea] ?? 0) + 1
+            }
+    },
+    {
+      type: input.type,
+      language: "pl",
+      phraseId: input.phraseId,
+      weakArea,
+      summary: `${labels[input.type]}: ${input.phraseText}`,
+      note: input.note
+    }
+  );
+}
+
 export function replaceReview(state: AppState, item: ReviewItem): AppState {
   return {
     ...state,
@@ -101,7 +148,7 @@ export function exportState(state: AppState) {
   const url = URL.createObjectURL(blob);
   const anchor = document.createElement("a");
   anchor.href = url;
-  anchor.download = `polish-learning-state-${todayIso()}.json`;
+  anchor.download = `language-tutor-state-${todayIso()}.json`;
   anchor.click();
   URL.revokeObjectURL(url);
 }

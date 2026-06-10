@@ -40,11 +40,13 @@ Persistent records live in:
 When helping with Polish learning:
 
 1. Read the current mission from `missions/` and the latest progress review if present.
-2. If generating a lesson, use `LESSON-FORMAT.md`.
-3. If logging progress, use `LEARNING-RECORD-FORMAT.md`.
-4. If creating drills, use `DRILL-FORMAT.md`.
-5. If expanding phrasebook or glossary, use the relevant format file.
-6. End with a small action: what to say today, what to review next, or what to record.
+2. If the user provides an app export, prefer `language-tutor-learner-snapshot-*.json` over the raw backup JSON.
+3. Read `resources/learner-snapshot-schema.md` and `resources/app-progress-import-notes.md` before turning snapshot data into a plan.
+4. If generating a lesson, use `LESSON-FORMAT.md`.
+5. If logging progress, use `LEARNING-RECORD-FORMAT.md`.
+6. If creating drills, use `DRILL-FORMAT.md`.
+7. If expanding phrasebook or glossary, use the relevant format file.
+8. End with a small action: what to say today, what to review next, or what to record.
 
 ## Lesson Style
 
@@ -87,6 +89,17 @@ Weak areas can come from quiz misses, hard flashcards, self-reports, wife correc
 - 5 quick prompts
 - one speaking task
 - one real-life challenge
+
+The app snapshot uses stable weak-area IDs where possible:
+
+- `gender-agreement`
+- `cases-endings`
+- `phrase-recall`
+- `listening-pronunciation`
+- `verbs-tense`
+- `repair-phrases`
+- `home-usage`
+- `confidence-hesitation`
 
 ## Handoff
 

@@ -16,6 +16,7 @@ The first milestone is intentionally local and simple: run on your MacBook, open
 - Phrase status: `hard`, `known`, `needs-review`
 - Quiz scoring and weak-area tracking
 - JSON export/import/reset
+- Learner snapshot export for Codex tutor planning
 - Project-local Codex skill at `.codex/skills/teach-polish`
 
 ## Run Locally on macOS
@@ -130,6 +131,30 @@ Skill records are markdown files under:
 ```
 
 App progress is browser-local and can be exported from Settings & Data as JSON. A future `/teach-polish` session can read that export and create a progress review or next lesson plan.
+
+## Adaptive Tutor Loop
+
+Use Settings & Data to export `language-tutor-learner-snapshot-YYYY-MM-DD.json`. This is a compact tutor-facing summary, not the full raw app backup.
+
+The snapshot includes:
+
+- completed lessons and quiz scores
+- known, hard, and needs-review phrases
+- due review queue
+- recent quiz misses
+- weak areas
+- practice logs, including used-at-home, wife-correction, and hesitation events
+- recent corrections, notes, and tutor hints
+
+Recommended local loop:
+
+1. Use the app normally on your Mac or phone.
+2. In Settings & Data, export the learner snapshot.
+3. Ask Codex to use `/teach-polish` and read the snapshot.
+4. Have Codex generate the next lesson, drill, or progress review under `.codex/skills/teach-polish/`.
+5. Add app-ready lessons manually for now in `lib/polish-content.ts`.
+
+Use raw `Export JSON` only for backup, restore, or moving browser state between devices.
 
 ## Add Lessons
 

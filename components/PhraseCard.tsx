@@ -1,7 +1,9 @@
 "use client";
 
-import { Check, Flame, RotateCcw } from "lucide-react";
-import type { Phrase, PhraseStatus } from "@/lib/types";
+import { Check, CircleHelp, Flame, Home, MessageCircle, RotateCcw } from "lucide-react";
+import type { Phrase, PhraseStatus, PracticeLogType } from "@/lib/types";
+
+type PhrasePracticeLogType = Extract<PracticeLogType, "used-at-home" | "correction" | "hesitation">;
 
 const statusLabel: Record<PhraseStatus, string> = {
   new: "New",
@@ -13,11 +15,13 @@ const statusLabel: Record<PhraseStatus, string> = {
 export function PhraseCard({
   phrase,
   status = "new",
-  onStatus
+  onStatus,
+  onLog
 }: {
   phrase: Phrase;
   status?: PhraseStatus;
   onStatus?: (status: PhraseStatus) => void;
+  onLog?: (type: PhrasePracticeLogType) => void;
 }) {
   return (
     <article className="rounded-lg border border-black/10 bg-white p-4 shadow-sm">
@@ -40,6 +44,19 @@ export function PhraseCard({
           </button>
           <button className="secondary-button px-2" onClick={() => onStatus("known")} title="Mark known">
             <Check size={16} /> Known
+          </button>
+        </div>
+      ) : null}
+      {onLog ? (
+        <div className="mt-3 grid grid-cols-3 gap-2 border-t border-black/10 pt-3">
+          <button className="secondary-button px-2" onClick={() => onLog("used-at-home")} title="Log used at home">
+            <Home size={16} /> Used
+          </button>
+          <button className="secondary-button px-2" onClick={() => onLog("correction")} title="Log wife correction">
+            <MessageCircle size={16} /> Corrected
+          </button>
+          <button className="secondary-button px-2" onClick={() => onLog("hesitation")} title="Log hesitation">
+            <CircleHelp size={16} /> Hesitated
           </button>
         </div>
       ) : null}
