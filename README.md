@@ -16,6 +16,7 @@ The first milestone is intentionally local and simple: run on your MacBook, open
 - Phrase status: `hard`, `known`, `needs-review`
 - Quiz scoring and weak-area tracking
 - Daily miss drill that retries recent quiz misses before review misses
+- Local generated drill JSON import from `/teach-polish`
 - JSON export/import/reset
 - Learner snapshot export for Codex tutor planning
 - Project-local Codex skill at `.codex/skills/teach-polish`
@@ -181,7 +182,9 @@ Recommended local loop:
 2. In Settings & Data, copy the Codex tutor prompt or export the learner snapshot.
 3. Paste the prompt into Codex, or ask Codex to use `/teach-polish` and read the exported snapshot.
 4. Have Codex generate one focused next lesson, drill, or progress review under `.codex/skills/teach-polish/`.
-5. Add app-ready lessons manually for now in `lib/polish-content.ts`.
+5. For generated drills, copy the `App-Ready JSON` payload into a local `.json` file and import it from Settings & Data.
+6. Open imported drills from Practice and log retry/proof locally.
+7. Add app-ready lessons manually for now in `lib/polish-content.ts`.
 
 Use `docs/playbooks/commit-worthy-lessons.md` before turning a generated lesson into committed seeded content.
 

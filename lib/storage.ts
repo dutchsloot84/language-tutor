@@ -1,6 +1,7 @@
 "use client";
 
 import { phrases } from "./polish-content";
+import { normalizeGeneratedDrills } from "./generated-drills";
 import { addDaysIso, createReviewItem, todayIso } from "./srs";
 import type { AppState, PhraseStatus, PracticeLog, ReviewItem, WeakAreaId } from "./types";
 
@@ -27,6 +28,10 @@ export function createInitialState(): AppState {
     weakAreas: {},
     practiceLogs: [],
     notes: {},
+    generatedDrills: {
+      version: 1,
+      items: []
+    },
     streak: {
       count: 0
     }
@@ -64,6 +69,7 @@ function migrateState(parsed: Partial<AppState>): AppState {
     weakAreas: parsed.weakAreas ?? initial.weakAreas,
     practiceLogs,
     notes: parsed.notes ?? initial.notes,
+    generatedDrills: normalizeGeneratedDrills(parsed.generatedDrills),
     streak: { ...initial.streak, ...parsed.streak }
   };
 }

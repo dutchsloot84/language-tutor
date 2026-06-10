@@ -56,8 +56,6 @@ Runtime AI is out of scope until this manual loop becomes a real bottleneck.
 - Execution packet: `planning/issues/LT-009-commit-worthy-lesson-workflow.md`
 - Workflow: `docs/playbooks/commit-worthy-lessons.md`
 
-## Next Useful Slices
-
 ### LT-007 Generated Drill Format
 - Outcome: `/teach-polish` has a stable markdown/JSON drill format for app-ready generated drills.
 - Why: standardize Codex output before import UI exists.
@@ -77,6 +75,8 @@ Runtime AI is out of scope until this manual loop becomes a real bottleneck.
   - imported drills persist locally
   - malformed JSON fails safely
   - imported drill appears in Practice
+
+## Next Useful Slices
 
 ### LT-010 Local Custom Lesson Storage
 - Outcome: generated or hand-authored lessons can live in browser state.

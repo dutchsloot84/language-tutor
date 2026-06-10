@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Mic, Target, UserRound } from "lucide-react";
+import { FilePlus, Mic, Sparkles, Target, UserRound } from "lucide-react";
 import { PageHeader } from "@/components/PageHeader";
 import { useAppState } from "@/components/useAppState";
 import { buildDailyMissDrillQueue } from "@/lib/miss-drill";
@@ -11,6 +11,7 @@ import { recordPractice } from "@/lib/storage";
 export default function PracticePage() {
   const [state, setState] = useAppState();
   const missDrillCount = state ? buildDailyMissDrillQueue(state).length : 0;
+  const generatedDrills = state?.generatedDrills.items ?? [];
 
   function logPractice(title: string) {
     if (!state) return;
@@ -32,6 +33,49 @@ export default function PracticePage() {
         <Link href="/practice/misses" className="secondary-button justify-start">
           <Target size={18} /> {missDrillCount ? `${missDrillCount} ready` : "Open drill"}
         </Link>
+      </section>
+      <section className="panel mb-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h2 className="text-lg font-bold">Generated drills</h2>
+            <p className="mt-1 text-sm text-ink/65">
+              Import app-ready drill JSON from Settings, then retry the generated quick prompts here.
+            </p>
+          </div>
+          <Link href="/settings" className="secondary-button justify-start">
+            <FilePlus size={18} /> Import
+          </Link>
+        </div>
+
+        {generatedDrills.length ? (
+          <div className="mt-4 grid gap-3 lg:grid-cols-2">
+            {generatedDrills.map(({ importedAt, drill }) => (
+              <Link
+                key={drill.id}
+                href={`/practice/generated/${encodeURIComponent(drill.id)}`}
+                className="focus-ring rounded-lg border border-black/10 bg-black/5 p-4 transition hover:bg-black/10"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="chip">{drill.level}</p>
+                    <h3 className="mt-3 text-lg font-bold">{drill.title}</h3>
+                    <p className="mt-1 text-sm text-ink/65">{drill.focus}</p>
+                  </div>
+                  <Sparkles className="shrink-0 text-moss" size={22} />
+                </div>
+                <div className="mt-3 flex flex-wrap gap-2 text-xs text-ink/60">
+                  <span>{drill.quickPrompts.length} prompts</span>
+                  <span>{drill.weakArea.replaceAll("-", " ")}</span>
+                  <span>Imported {new Date(importedAt).toLocaleDateString()}</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-4 rounded-md bg-black/5 p-3 text-sm text-ink/60">
+            No generated drills imported yet. Use the LT-007 App-Ready JSON payload after a `/teach-polish` session.
+          </p>
+        )}
       </section>
       <section className="grid gap-4 lg:grid-cols-2">
         {roleplayScripts.map((script) => (
