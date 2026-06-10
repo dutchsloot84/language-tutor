@@ -58,6 +58,8 @@ Before editing, confirm:
 
 If the slice touches local learner data, check `lib/types.ts`, `lib/storage.ts`, `lib/snapshot.ts`, and Settings export/import behavior together.
 
+In a fresh Codex worktree, run `npm run setup:worktree` before validation or dev-server work. Worktrees do not copy ignored dependency folders like `node_modules`; the setup command no-ops when dependencies are already present.
+
 ## Local-First Guardrail
 
 Default architecture:
@@ -91,6 +93,7 @@ When using `/teach-polish` with an app snapshot:
 
 Use the smallest truthful proof:
 
+- fresh worktree: `npm run setup:worktree`
 - docs-only: manual cross-read
 - type-only model changes: `npm run typecheck`
 - UI or route changes: `npm run typecheck` and `npm run build`

@@ -56,6 +56,7 @@ If these conflict, prefer the most specific task source, then code, then `README
 ## Canonical Commands
 
 - Install: `npm install`
+- Worktree bootstrap: `npm run setup:worktree`
 - Dev server: `npm run dev`
 - LAN dev server: `npm run dev:lan`
 - Typecheck: `npm run typecheck`
@@ -86,6 +87,8 @@ Use execution mode when the slice is ready to implement. Minimum packet:
 - out-of-scope follow-ups
 
 If the issue is not execution-ready, refine it first.
+
+For worktree threads, run `npm run setup:worktree` before validation or a dev server. Git worktrees do not copy ignored dependency folders such as `node_modules`, so this command installs dependencies only when required.
 
 ## Slice Boundaries
 

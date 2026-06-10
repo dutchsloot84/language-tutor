@@ -22,6 +22,7 @@
 - [ ]
 
 ## Validation Commands
+- `npm run setup:worktree` when running in a fresh worktree
 - 
 
 ## Manual Checks
