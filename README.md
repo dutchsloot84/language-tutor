@@ -186,6 +186,8 @@ Recommended local loop:
 6. Open imported drills from Practice and log retry/proof locally.
 7. Add app-ready lessons manually for now in `lib/polish-content.ts`.
 
+Use `docs/playbooks/commit-worthy-lessons.md` before turning a generated lesson into committed seeded content.
+
 Use raw `Export JSON` only for backup, restore, or moving browser state between devices.
 
 ## Add Lessons
@@ -208,6 +210,8 @@ Add a new `Lesson` with:
 - `speakingDrill`
 - `challenge`
 - `quiz`
+
+Generated lessons should pass `docs/playbooks/commit-worthy-lessons.md` before they are added as seeded content.
 
 For skill-side lesson records, copy `.codex/skills/teach-polish/LESSON-FORMAT.md` into `.codex/skills/teach-polish/lessons/YYYY-MM-DD-title.md`.
 
