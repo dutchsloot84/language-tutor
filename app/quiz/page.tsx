@@ -19,15 +19,35 @@ function normalizeAnswer(answer: string) {
   return answer
     .trim()
     .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ł/g, "l")
     .replace(/[.,?!]/g, "")
     .replace(/\s+/g, " ");
 }
 
 function isCorrectAnswer(question: QuizQuestion, answer: string) {
   const given = normalizeAnswer(answer);
-  const expected = normalizeAnswer(question.answer);
   if (!given) return false;
-  return given === expected;
+  const accepted = question.acceptedAnswers?.length ? question.acceptedAnswers : [question.answer];
+  return accepted.some((expected) => given === normalizeAnswer(expected));
+}
+
+function acceptedAnswerText(question: QuizQuestion) {
+  const accepted = question.acceptedAnswers?.length ? question.acceptedAnswers : [question.answer];
+  return Array.from(new Set(accepted)).join(" / ");
+}
+
+function answerVariantsForPhrase(phraseId: string) {
+  const phrase = phrases.find((item) => item.id === phraseId)!;
+  const sameMeaning = phrases.filter(
+    (item) =>
+      item.id !== phrase.id &&
+      item.en === phrase.en &&
+      item.category === phrase.category &&
+      item.tags.some((tag) => phrase.tags.includes(tag))
+  );
+  return [phrase.pl, ...sameMeaning.map((item) => item.pl)];
 }
 
 export default function QuizPage() {
@@ -44,8 +64,14 @@ export default function QuizPage() {
       return {
         id: `phrase-${phrase.id}`,
         type: index % 2 === 0 ? "translate-en-pl" : "translate-pl-en",
-        prompt: index % 2 === 0 ? `Say this in Polish: ${phrase.en}` : `Translate: ${phrase.pl}`,
-        answer: index % 2 === 0 ? phrase.pl : phrase.en
+        prompt:
+          index % 2 === 0 && answerVariantsForPhrase(phrase.id).length > 1
+            ? `Say this in Polish: ${phrase.en} (any natural gender form is accepted)`
+            : index % 2 === 0
+              ? `Say this in Polish: ${phrase.en}`
+              : `Translate: ${phrase.pl}`,
+        answer: index % 2 === 0 ? phrase.pl : phrase.en,
+        acceptedAnswers: index % 2 === 0 ? answerVariantsForPhrase(phrase.id) : [phrase.en]
       };
     });
     return [...lesson.quiz, ...translationQuestions];
@@ -185,12 +211,12 @@ export default function QuizPage() {
                   setAnswers((current) => ({ ...current, [question.id]: event.target.value }));
                   setResult(null);
                 }}
-                placeholder="Type your answer"
+                placeholder="Type your answer; Polish accents optional"
               />
             )}
             {result ? (
               <p className="mt-3 text-sm text-ink/65">
-                Answer: <span className="font-semibold text-ink">{question.answer}</span>
+                Accepted: <span className="font-semibold text-ink">{acceptedAnswerText(question)}</span>
               </p>
             ) : null}
           </article>

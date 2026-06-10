@@ -39,6 +39,7 @@ export type QuizQuestion = {
   id: string;
   prompt: string;
   answer: string;
+  acceptedAnswers?: string[];
   choices?: string[];
   type: "multiple-choice" | "translate-pl-en" | "translate-en-pl" | "missing-word";
 };
