@@ -9,12 +9,13 @@ The first milestone is intentionally local and simple: run on your MacBook, open
 - Next.js + TypeScript mobile-first PWA
 - Polish as the first language module
 - Local browser persistence with `localStorage`
-- Dashboard, Today’s Lesson, Flashcards, Phrasebook, Practice, Quiz, Progress, Glossary, Settings/Data
+- Dashboard, Today’s Lesson, Flashcards, Phrasebook, Practice, Daily Miss Drill, Quiz, Progress, Glossary, Settings/Data
 - 120 starter family/home Polish phrases
 - 5 sample daily lessons
 - Basic spaced repetition scheduling
 - Phrase status: `hard`, `known`, `needs-review`
 - Quiz scoring and weak-area tracking
+- Daily miss drill that retries recent quiz misses before review misses
 - JSON export/import/reset
 - Learner snapshot export for Codex tutor planning
 - Project-local Codex skill at `.codex/skills/teach-polish`

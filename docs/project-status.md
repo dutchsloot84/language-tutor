@@ -31,6 +31,7 @@ The project is proving that a useful adaptive tutor can work with:
 - Local learner snapshot export.
 - Practice logs for `used-at-home`, `correction`, and `hesitation`.
 - Quiz miss logging with weak-area IDs.
+- Daily miss drill for recent quiz misses and review misses.
 - `/teach-polish` snapshot schema docs.
 - README documentation for the adaptive tutor loop.
 
@@ -57,16 +58,13 @@ Prove the adaptive loop over several real study sessions:
 
 ## Current Top Backlog
 
-1. Snapshot preview page.
-2. Review miss evidence.
-3. Daily miss drill.
-4. Copy Codex tutor prompt.
-5. Wife correction retry flow.
-6. Progress proof scorecard.
-7. Generated drill format.
-8. Generated drill import.
-9. Commit-worthy lesson workflow.
-10. Language module boundary.
+1. Copy Codex tutor prompt.
+2. Wife correction retry flow.
+3. Progress proof scorecard.
+4. Generated drill format.
+5. Generated drill import.
+6. Commit-worthy lesson workflow.
+7. Language module boundary.
 
 ## Expansion Gates
 

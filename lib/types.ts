@@ -83,6 +83,7 @@ export type LessonAttempt = {
 export type PracticeLogType =
   | "lesson"
   | "flashcard"
+  | "miss-drill"
   | "quiz"
   | "speaking"
   | "note"
