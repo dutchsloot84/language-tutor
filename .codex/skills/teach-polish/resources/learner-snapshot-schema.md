@@ -19,6 +19,7 @@ Use this snapshot as the bridge between the local-first Language Tutor app and `
 - `completedLessons`: lesson IDs, titles, situations, completion dates, scores, and notes.
 - `phraseStatuses`: grouped `known`, `hard`, and `needsReview` phrase lists.
 - `reviewQueue`: due phrases to practice now.
+- `reviewMisses`: repeated flashcard miss evidence grouped by phrase ID, including phrase text, translation, language, weak-area ID, current review status, total count, SRS misses, logged misses, and latest logged miss timestamp.
 - `quiz.scoresByLesson`: historical score arrays by lesson ID.
 - `quiz.recentMisses`: recent missed prompts with expected answer, learner answer, and weak-area ID.
 - `weakAreas`: stable weak-area IDs with labels and counts.
@@ -30,7 +31,7 @@ Use this snapshot as the bridge between the local-first Language Tutor app and `
 ## Practice Log Types
 
 - `lesson`: lesson completion.
-- `flashcard`: SRS review action.
+- `flashcard`: SRS review action. Hard and needs-review outcomes include `language`, `phraseId`, `phraseText`, `weakArea`, and `reviewOutcome`.
 - `quiz`: quiz submission, often with `quizMisses`.
 - `speaking`: roleplay or speaking practice.
 - `note`: freeform note.
@@ -51,7 +52,7 @@ Use this snapshot as the bridge between the local-first Language Tutor app and `
 
 ## Tutor Use
 
-1. Start with `recentCorrectionsAndNotes`, `quiz.recentMisses`, `phraseStatuses.hard`, and `reviewQueue`.
+1. Start with `recentCorrectionsAndNotes`, `quiz.recentMisses`, `reviewMisses`, `phraseStatuses.hard`, and `reviewQueue`.
 2. Select one weak area for the next drill unless the learner asks for a full lesson.
 3. Reuse known and due phrases as retrieval prompts before adding new material.
 4. Keep the plan home-focused and practical.

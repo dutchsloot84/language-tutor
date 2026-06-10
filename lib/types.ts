@@ -105,8 +105,10 @@ export type PracticeLog = {
   summary: string;
   language?: LanguageCode;
   phraseId?: string;
+  phraseText?: string;
   lessonId?: string;
   weakArea?: WeakAreaId;
+  reviewOutcome?: PhraseStatus;
   quizMisses?: QuizMiss[];
   note?: string;
 };
@@ -155,6 +157,19 @@ export type SnapshotPhrase = {
   misses?: number;
 };
 
+export type ReviewMissEvidence = {
+  phraseId: string;
+  phraseText: string;
+  translation: string;
+  language: LanguageCode;
+  weakArea: WeakAreaId;
+  status: Extract<PhraseStatus, "hard" | "needs-review">;
+  count: number;
+  srsMisses: number;
+  loggedMisses: number;
+  lastMissedAt?: string;
+};
+
 export type LearnerSnapshot = {
   schema: "language-tutor-learner-snapshot-v1";
   generatedAt: string;
@@ -190,6 +205,7 @@ export type LearnerSnapshot = {
     needsReview: SnapshotPhrase[];
   };
   reviewQueue: SnapshotPhrase[];
+  reviewMisses: ReviewMissEvidence[];
   quiz: {
     scoresByLesson: Record<string, number[]>;
     recentMisses: QuizMiss[];

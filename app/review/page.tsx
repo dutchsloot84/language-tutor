@@ -25,8 +25,26 @@ export default function ReviewPage() {
   function rate(status: PhraseStatus) {
     if (!state || !phrase) return;
     const reviewed = scheduleReview(state.reviews[phrase.id], status);
-    const next = recordPractice(replaceReview(state, reviewed), {
+    const isMiss = status === "hard" || status === "needs-review";
+    const updatedState = replaceReview(
+      isMiss
+        ? {
+            ...state,
+            weakAreas: {
+              ...state.weakAreas,
+              "phrase-recall": (state.weakAreas["phrase-recall"] ?? 0) + 1
+            }
+          }
+        : state,
+      reviewed
+    );
+    const next = recordPractice(updatedState, {
       type: "flashcard",
+      language: "pl",
+      phraseId: phrase.id,
+      phraseText: phrase.pl,
+      weakArea: isMiss ? "phrase-recall" : undefined,
+      reviewOutcome: status,
       summary: `${phrase.pl} marked ${status}`
     });
     setState(next);
